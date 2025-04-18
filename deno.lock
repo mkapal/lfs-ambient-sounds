@@ -1,0 +1,122 @@
+{
+  "version": "4",
+  "specifiers": {
+    "npm:dotenv@*": "16.5.0",
+    "npm:dotenv@^16.5.0": "16.5.0",
+    "npm:node-insim@*": "4.6.3",
+    "npm:node-insim@^4.6.3": "4.6.3",
+    "npm:node-web-audio-api@*": "1.0.4",
+    "npm:node-web-audio-api@^1.0.4": "1.0.4"
+  },
+  "npm": {
+    "@types/debug@4.1.12": {
+      "integrity": "sha512-vIChWdVG3LG1SMxEvI/AK+FWJthlrqlTu7fbrlywTkkaONwk/UAGaULXRlf8vkzFBLVm0zkMdCquhL5aOjhXPQ==",
+      "dependencies": [
+        "@types/ms"
+      ]
+    },
+    "@types/lodash@4.17.16": {
+      "integrity": "sha512-HX7Em5NYQAXKW+1T+FiuG27NGwzJfCX3s1GjOa7ujxZa52kjJLOr4FUxT+giF6Tgxv1e+/czV/iTtBw27WTU9g=="
+    },
+    "@types/ms@2.1.0": {
+      "integrity": "sha512-GsCCIZDE/p3i96vtEqx+7dBUGXrc7zeSK3wwPHIaRThS+9OhWIXRqzs4d6k1SVU8g91DrNRWxWUGhp5KXQb2VA=="
+    },
+    "caller@1.1.0": {
+      "integrity": "sha512-n+21IZC3j06YpCWaxmUy5AnVqhmCIM2bQtqQyy00HJlmStRt6kwDX5F9Z97pqwAB+G/tgSz6q/kUBbNyQzIubw=="
+    },
+    "data-uri-to-buffer@4.0.1": {
+      "integrity": "sha512-0R9ikRb668HB7QDxT1vkpuUBtqc53YyAwMwGeUFKRojY/NWKvdZ+9UYtRfGmhqNbRkTSVpMbmyhXipFFv2cb/A=="
+    },
+    "debug@4.4.0": {
+      "integrity": "sha512-6WTZ/IxCY/T6BALoZHaE4ctp9xm+Z5kY/pzYaCHRFeyVhojxlrm+46y68HA6hr0TcwEssoxNiDEUJQjfPZ/RYA==",
+      "dependencies": [
+        "ms"
+      ]
+    },
+    "dotenv@16.5.0": {
+      "integrity": "sha512-m/C+AwOAr9/W1UOIZUo232ejMNnJAJtYQjUbHoNTBNTJSvqzzDh7vnrei3o3r3m9blf6ZoDkvcw0VmozNRFJxg=="
+    },
+    "fetch-blob@3.2.0": {
+      "integrity": "sha512-7yAQpD2UMJzLi1Dqv7qFYnPbaPx7ZfFK6PiIxQ4PfkGPyNyl2Ugx+a/umUonmKqjhM4DnfbMvdX6otXq83soQQ==",
+      "dependencies": [
+        "node-domexception",
+        "web-streams-polyfill"
+      ]
+    },
+    "formdata-polyfill@4.0.10": {
+      "integrity": "sha512-buewHzMvYL29jdeQTVILecSaZKnt/RJWjoZCF5OW60Z67/GmSLBkOFM7qh1PI3zFNtJbaZL5eQu1vLfazOwj4g==",
+      "dependencies": [
+        "fetch-blob"
+      ]
+    },
+    "lodash@4.17.21": {
+      "integrity": "sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg=="
+    },
+    "ms@2.1.3": {
+      "integrity": "sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA=="
+    },
+    "node-domexception@1.0.0": {
+      "integrity": "sha512-/jKZoMpw0F8GRwl4/eLROPA3cfcXtLApP0QzLmUT/HuPCZWyB7IY9ZrMeKw2O/nFIqPQB3PVM9aYm0F312AXDQ=="
+    },
+    "node-fetch@3.3.2": {
+      "integrity": "sha512-dRB78srN/l6gqWulah9SrxeYnxeddIG30+GOqK/9OlLVyLg3HPnr6SqOWTWOXKRwC2eGYCkZ59NNuSgvSrpgOA==",
+      "dependencies": [
+        "data-uri-to-buffer",
+        "fetch-blob",
+        "formdata-polyfill"
+      ]
+    },
+    "node-insim@4.6.3": {
+      "integrity": "sha512-zPxm4vbDMXwM0c+6AJ2RGIdT92ITtDtAPxpLqqk/tUdWqcWImngpD5hEWCu3fho5TxBlkbrWKUvWIjiTNBGeOg==",
+      "dependencies": [
+        "@types/debug",
+        "@types/lodash",
+        "debug",
+        "lodash",
+        "parse-lfs-message",
+        "reflect-metadata",
+        "supports-color",
+        "tiny-typed-emitter",
+        "unicode-to-lfs"
+      ]
+    },
+    "node-web-audio-api@1.0.4": {
+      "integrity": "sha512-lzhqTlHeosL6FEx4DtnU5c9pzxoesCUsucigA34Z+D1lBG8GRbULUuw1UeY5KMptnJctIANLHXOCc/ZbWkcSAA==",
+      "dependencies": [
+        "caller",
+        "node-fetch",
+        "webidl-conversions"
+      ]
+    },
+    "parse-lfs-message@1.2.4": {
+      "integrity": "sha512-P3tXbk4VHJOA7lBaDe0JKrpKas82/kcPtvn7diA4fuYGpm4YgTCUdaCV1SkTZ0FVUuegLIRLs/v9PwqyrlBmNg=="
+    },
+    "reflect-metadata@0.1.14": {
+      "integrity": "sha512-ZhYeb6nRaXCfhnndflDK8qI6ZQ/YcWZCISRAWICW9XYqMUwjZM9Z0DveWX/ABN01oxSHwVxKQmxeYZSsm0jh5A=="
+    },
+    "supports-color@9.4.0": {
+      "integrity": "sha512-VL+lNrEoIXww1coLPOmiEmK/0sGigko5COxI09KzHc2VJXJsQ37UaQ+8quuxjDeA7+KnLGTWRyOXSLLR2Wb4jw=="
+    },
+    "tiny-typed-emitter@2.1.0": {
+      "integrity": "sha512-qVtvMxeXbVej0cQWKqVSSAHmKZEHAvxdF8HEUBFWts8h+xEo5m/lEiPakuyZ3BnCBjOD8i24kzNOiOLLgsSxhA=="
+    },
+    "unicode-to-lfs@2.0.0": {
+      "integrity": "sha512-5KHJgzDaQOPou5kgIoF3kSSRP9t2OkDScUb4yqZv7wpM2Tdufj7e00Bbb4K28O5LWh2IY3vwyctnu44hTmTEUQ=="
+    },
+    "web-streams-polyfill@3.3.3": {
+      "integrity": "sha512-d2JWLCivmZYTSIoge9MsgFCZrt571BikcWGYkjC1khllbTeDlGqZ2D8vD8E/lJa8WGWbb7Plm8/XJYV7IJHZZw=="
+    },
+    "webidl-conversions@7.0.0": {
+      "integrity": "sha512-VwddBukDzu71offAQR975unBIGqfKZpM+8ZX6ySk8nYhVoo5CYaZyzt3YBvYtRtO+aoGlqxPg/B87NGVZ/fu6g=="
+    }
+  },
+  "workspace": {
+    "packageJson": {
+      "dependencies": [
+        "npm:dotenv@^16.5.0",
+        "npm:node-insim@^4.6.3",
+        "npm:node-web-audio-api@^1.0.4"
+      ]
+    }
+  }
+}

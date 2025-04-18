@@ -1,15 +1,19 @@
-import path from "path";
-process.env.NODE_ICU_DATA = path.join(__dirname, "full-icu-data");
+import path from "node:path";
+
+console.log("ICU versions:", process.versions.icu);
+
+process.env.NODE_ICU_DATA = path.join(process.cwd(), "full-icu-data");
 console.log({ NODE_ICU_DATA: process.env.NODE_ICU_DATA });
 
-import "./env";
+import "./env.ts";
 
-import fs from "fs";
-import { InSimFlags, IS_ISI_ReqI, PacketType } from "node-insim/packets";
-import { InSim } from "node-insim";
-import { AudioContext } from "node-web-audio-api";
+import fs from "node:fs";
+import { InSimFlags, IS_ISI_ReqI, PacketType } from "npm:node-insim/packets";
+import { InSim } from "npm:node-insim";
+import { AudioContext } from "npm:node-web-audio-api";
 
-import { lfsToMeters } from "./lfsConversions";
+import { lfsToMeters } from "./lfsConversions.ts";
+import process from "node:process";
 
 console.log("Connecting to InSim");
 
@@ -49,6 +53,7 @@ inSim.on(PacketType.ISP_VER, (packet) => {
     console.log("Sound loaded");
 
     const context = new AudioContext();
+    // @ts-ignore test
     const buffer = await context.decodeAudioData(data.buffer);
 
     const source = context.createBufferSource();
