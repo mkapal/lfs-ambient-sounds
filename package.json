@@ -8,7 +8,7 @@
     "dev": "tsx watch src/index.ts",
     "serve:production": "node ./dist/index.cjs",
     "build": "tsup src/index.ts",
-    "package": "pkg --options \"icu-data-dir=./full-icu-data\" .",
+    "package": "pkg .",
     "format": "prettier --write ."
   },
   "dependencies": {
@@ -30,7 +30,10 @@
   ],
   "pkg": {
     "scripts": "dist/index.cjs",
-    "assets": "pubic/**/*",
+    "assets": [
+      "pubic/**/*",
+      "full-icu-data/icudt74l.dat"
+    ],
     "targets": [
       "node18-win-x64"
     ],

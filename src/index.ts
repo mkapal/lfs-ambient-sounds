@@ -1,3 +1,7 @@
+import path from "path";
+process.env.NODE_ICU_DATA = path.join(__dirname, "full-icu-data");
+console.log({ NODE_ICU_DATA: process.env.NODE_ICU_DATA });
+
 import "./env";
 
 import fs from "fs";
