@@ -6,17 +6,22 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "serve:production": "node ./dist/index.cjs",
     "build": "tsup src/index.ts",
     "package": "pkg .",
     "format": "prettier --write ."
   },
   "dependencies": {
+    "debug": "^4.3.4",
     "dotenv": "^16.5.0",
-    "node-insim": "^4.6.3",
-    "node-web-audio-api": "^1.0.4"
+    "lodash": "^4.17.21",
+    "node-web-audio-api": "^1.0.4",
+    "reflect-metadata": "^0.1.13",
+    "supports-color": "^9.2.3",
+    "tiny-typed-emitter": "^2.1.0"
   },
   "devDependencies": {
+    "@types/debug": "^4.1.7",
+    "@types/lodash": "^4.14.182",
     "@types/node": "^22.14.0",
     "pkg": "^5.8.1",
     "prettier": "^3.5.3",
@@ -31,13 +36,12 @@
   "pkg": {
     "scripts": "dist/index.cjs",
     "assets": [
-      "pubic/**/*",
-      "full-icu-data/icudt74l.dat"
+      "pubic/**/*"
     ],
     "targets": [
       "node18-win-x64"
     ],
-    "outputPath": "."
+    "outputPath": "./bin"
   },
   "packageManager": "pnpm@9.15.1+sha512.1acb565e6193efbebda772702950469150cf12bcc764262e7587e71d19dc98a423dff9536e57ea44c49bdf790ff694e83c27be5faa23d67e0c033b583be4bfcf"
 }

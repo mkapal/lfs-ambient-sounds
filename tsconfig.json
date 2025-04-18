@@ -12,7 +12,14 @@
     "skipDefaultLibCheck": true,
     "esModuleInterop": true,
     "noImplicitAny": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "experimentalDecorators": true,
+    "paths": {
+      "parse-lfs-message": ["./src/parse-lfs-message"],
+      "unicode-to-lfs": ["./src/unicode-to-lfs"],
+      "node-insim": ["./src/node-insim"],
+      "node-insim/packets": ["./src/node-insim/packets"]
+    }
   },
   "ts-node": {
     "esm": true

@@ -8,28 +8,46 @@ importers:
 
   .:
     dependencies:
+      debug:
+        specifier: ^4.3.4
+        version: 4.4.0(supports-color@9.4.0)
       dotenv:
         specifier: ^16.5.0
         version: 16.5.0
-      node-insim:
-        specifier: ^4.6.3
-        version: 4.6.3
+      lodash:
+        specifier: ^4.17.21
+        version: 4.17.21
       node-web-audio-api:
         specifier: ^1.0.4
         version: 1.0.4
+      reflect-metadata:
+        specifier: ^0.1.13
+        version: 0.1.14
+      supports-color:
+        specifier: ^9.2.3
+        version: 9.4.0
+      tiny-typed-emitter:
+        specifier: ^2.1.0
+        version: 2.1.0
     devDependencies:
+      '@types/debug':
+        specifier: ^4.1.7
+        version: 4.1.12
+      '@types/lodash':
+        specifier: ^4.14.182
+        version: 4.17.16
       '@types/node':
         specifier: ^22.14.0
         version: 22.14.1
       pkg:
         specifier: ^5.8.1
-        version: 5.8.1
+        version: 5.8.1(supports-color@9.4.0)
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
       tsup:
         specifier: ^8.4.0
-        version: 8.4.0(tsx@4.19.3)(typescript@5.8.3)
+        version: 8.4.0(supports-color@9.4.0)(tsx@4.19.3)(typescript@5.8.3)
       tsx:
         specifier: ^4.19.3
         version: 4.19.3
@@ -750,9 +768,6 @@ packages:
     resolution: {integrity: sha512-dRB78srN/l6gqWulah9SrxeYnxeddIG30+GOqK/9OlLVyLg3HPnr6SqOWTWOXKRwC2eGYCkZ59NNuSgvSrpgOA==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
 
-  node-insim@4.6.3:
-    resolution: {integrity: sha512-zPxm4vbDMXwM0c+6AJ2RGIdT92ITtDtAPxpLqqk/tUdWqcWImngpD5hEWCu3fho5TxBlkbrWKUvWIjiTNBGeOg==}
-
   node-web-audio-api@1.0.4:
     resolution: {integrity: sha512-lzhqTlHeosL6FEx4DtnU5c9pzxoesCUsucigA34Z+D1lBG8GRbULUuw1UeY5KMptnJctIANLHXOCc/ZbWkcSAA==}
     engines: {node: '>= 14'}
@@ -770,9 +785,6 @@ packages:
 
   package-json-from-dist@1.0.1:
     resolution: {integrity: sha512-UEZIS3/by4OC8vL3P2dTXRETpebLI2NiI5vIrjaD/5UtrkFX/tNbwjTSRAGC/+7CAo2pIcBaRgWmcBBHcsaCIw==}
-
-  parse-lfs-message@1.2.4:
-    resolution: {integrity: sha512-P3tXbk4VHJOA7lBaDe0JKrpKas82/kcPtvn7diA4fuYGpm4YgTCUdaCV1SkTZ0FVUuegLIRLs/v9PwqyrlBmNg==}
 
   path-key@3.1.1:
     resolution: {integrity: sha512-ojmeN0qd+y0jszEtoY48r0Peq5dwMEkIlCOu6Q5f41lfkswXuKtYrhgoTpLnyIcHm24Uhqx+5Tqm2InSwLhE6Q==}
@@ -1071,9 +1083,6 @@ packages:
   undici-types@6.21.0:
     resolution: {integrity: sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==}
 
-  unicode-to-lfs@2.0.0:
-    resolution: {integrity: sha512-5KHJgzDaQOPou5kgIoF3kSSRP9t2OkDScUb4yqZv7wpM2Tdufj7e00Bbb4K28O5LWh2IY3vwyctnu44hTmTEUQ==}
-
   universalify@2.0.1:
     resolution: {integrity: sha512-gptHNQghINnc/vTGIk0SOFGFNXw7JVrlRUtConJRlvaw6DuX0wO5Jeko9sWrMBhh+PsYAZ7oXAiOnf/UKogyiw==}
     engines: {node: '>= 10.0.0'}
@@ -1341,7 +1350,7 @@ snapshots:
     dependencies:
       undici-types: 6.21.0
 
-  agent-base@6.0.2:
+  agent-base@6.0.2(supports-color@9.4.0):
     dependencies:
       debug: 4.4.0(supports-color@9.4.0)
     transitivePeerDependencies:
@@ -1587,9 +1596,9 @@ snapshots:
     dependencies:
       function-bind: 1.1.2
 
-  https-proxy-agent@5.0.1:
+  https-proxy-agent@5.0.1(supports-color@9.4.0):
     dependencies:
-      agent-base: 6.0.2
+      agent-base: 6.0.2(supports-color@9.4.0)
       debug: 4.4.0(supports-color@9.4.0)
     transitivePeerDependencies:
       - supports-color
@@ -1707,18 +1716,6 @@ snapshots:
       fetch-blob: 3.2.0
       formdata-polyfill: 4.0.10
 
-  node-insim@4.6.3:
-    dependencies:
-      '@types/debug': 4.1.12
-      '@types/lodash': 4.17.16
-      debug: 4.4.0(supports-color@9.4.0)
-      lodash: 4.17.21
-      parse-lfs-message: 1.2.4
-      reflect-metadata: 0.1.14
-      supports-color: 9.4.0
-      tiny-typed-emitter: 2.1.0
-      unicode-to-lfs: 2.0.0
-
   node-web-audio-api@1.0.4:
     dependencies:
       caller: 1.1.0
@@ -1734,8 +1731,6 @@ snapshots:
   p-is-promise@3.0.0: {}
 
   package-json-from-dist@1.0.1: {}
-
-  parse-lfs-message@1.2.4: {}
 
   path-key@3.1.1: {}
 
@@ -1756,11 +1751,11 @@ snapshots:
 
   pirates@4.0.7: {}
 
-  pkg-fetch@3.4.2:
+  pkg-fetch@3.4.2(supports-color@9.4.0):
     dependencies:
       chalk: 4.1.2
       fs-extra: 9.1.0
-      https-proxy-agent: 5.0.1
+      https-proxy-agent: 5.0.1(supports-color@9.4.0)
       node-fetch: 2.7.0
       progress: 2.0.3
       semver: 7.7.1
@@ -1770,7 +1765,7 @@ snapshots:
       - encoding
       - supports-color
 
-  pkg@5.8.1:
+  pkg@5.8.1(supports-color@9.4.0):
     dependencies:
       '@babel/generator': 7.18.2
       '@babel/parser': 7.18.4
@@ -1782,7 +1777,7 @@ snapshots:
       is-core-module: 2.9.0
       minimist: 1.2.8
       multistream: 4.1.0
-      pkg-fetch: 3.4.2
+      pkg-fetch: 3.4.2(supports-color@9.4.0)
       prebuild-install: 7.1.1
       resolve: 1.22.10
       stream-meter: 1.0.4
@@ -2025,7 +2020,7 @@ snapshots:
 
   ts-interface-checker@0.1.13: {}
 
-  tsup@8.4.0(tsx@4.19.3)(typescript@5.8.3):
+  tsup@8.4.0(supports-color@9.4.0)(tsx@4.19.3)(typescript@5.8.3):
     dependencies:
       bundle-require: 5.1.0(esbuild@0.25.2)
       cac: 6.7.14
@@ -2065,8 +2060,6 @@ snapshots:
   typescript@5.8.3: {}
 
   undici-types@6.21.0: {}
-
-  unicode-to-lfs@2.0.0: {}
 
   universalify@2.0.1: {}
 
