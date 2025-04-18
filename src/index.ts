@@ -1,5 +1,4 @@
 import "./title";
-import "./config";
 
 import chalk from "chalk";
 import fs from "fs";
@@ -13,20 +12,17 @@ import {
 } from "node-insim/packets";
 import { AudioContext } from "node-web-audio-api";
 
+import { config } from "./config";
 import { lfsToMeters } from "./lfsConversions";
-
-const host = process.env.HOST ?? "127.0.0.1";
-const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 29999;
-const admin = process.env.ADMIN ?? "";
 
 const inSim = new InSim();
 
-console.log(`Connecting to ${host}:${port}`);
+console.log(`Connecting to ${config.insim.host}:${config.insim.port}`);
 inSim.connect({
   IName: "Sound",
-  Host: host,
-  Port: port,
-  Admin: admin,
+  Host: config.insim.host,
+  Port: config.insim.port,
+  Admin: config.insim.admin,
   Flags: InSimFlags.ISF_LOCAL | InSimFlags.ISF_MCI,
   ReqI: IS_ISI_ReqI.SEND_VERSION,
   Interval: 100,
@@ -37,6 +33,8 @@ let viewPLID = 0;
 inSim.on(PacketType.ISP_STA, (packet) => {
   viewPLID = packet.ViewPLID;
 });
+
+inSim.on(PacketType.ISP_RST, (packet) => {});
 
 inSim.on(PacketType.ISP_VER, (packet) => {
   if (packet.ReqI !== IS_ISI_ReqI.SEND_VERSION) {
