@@ -2,27 +2,24 @@
   "name": "lfs-ambient-sounds",
   "version": "0.0.0",
   "main": "dist/index.cjs",
+  "bin": "dist/index.cjs",
   "type": "module",
   "scripts": {
-    "dev": "tsx watch src/index.tsx",
+    "dev": "tsx watch src/index.ts",
     "serve:production": "node ./dist/index.cjs",
-    "build": "tsup src/index.tsx",
-    "package": "nexe ./dist/index.cjs --resouce \"./public/**/*\" -o LFS-Ambient-Sounds.exe",
+    "build": "tsup src/index.ts",
+    "package": "pkg --options \"icu-data-dir=./full-icu-data\" .",
     "format": "prettier --write ."
   },
   "dependencies": {
     "dotenv": "^16.5.0",
     "node-insim": "^4.6.3",
-    "node-web-audio-api": "^1.0.4",
-    "prettier": "^3.5.3",
-    "react": "^18.3.1",
-    "react-node-insim": "^0.0.13",
-    "web-audio-api": "^0.2.2"
+    "node-web-audio-api": "^1.0.4"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",
-    "@types/react": "^18.3.3",
-    "nexe": "5.0.0-beta.4",
+    "pkg": "^5.8.1",
+    "prettier": "^3.5.3",
     "tsup": "^8.4.0",
     "tsx": "^4.19.3",
     "typescript": "^5.8.3"
@@ -31,5 +28,13 @@
     "**/*.js",
     "**/*.d.ts"
   ],
-  "packageManager": "pnpm@10.8.0+sha512.0e82714d1b5b43c74610193cb20734897c1d00de89d0e18420aebc5977fa13d780a9cb05734624e81ebd81cc876cd464794850641c48b9544326b5622ca29971"
+  "pkg": {
+    "scripts": "dist/index.cjs",
+    "assets": "pubic/**/*",
+    "targets": [
+      "node18-win-x64"
+    ],
+    "outputPath": "."
+  },
+  "packageManager": "pnpm@9.15.1+sha512.1acb565e6193efbebda772702950469150cf12bcc764262e7587e71d19dc98a423dff9536e57ea44c49bdf790ff694e83c27be5faa23d67e0c033b583be4bfcf"
 }
