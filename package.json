@@ -1,13 +1,12 @@
 {
   "name": "lfs-ambient-sounds",
   "version": "0.0.0",
-  "main": "dist/index.cjs",
-  "bin": "dist/index.cjs",
+  "main": "dist/index.js",
+  "bin": "dist/index.js",
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "tsup src/index.ts",
-    "package": "pkg .",
+    "build": "tsup src/index.ts && pkg -o dist/bin/LFS-Ambient-Sounds.exe . && cp -R sound dist/bin/",
     "format": "prettier --write .",
     "lint": "eslint \"./src/**/*\" --ext .ts",
     "lint:fix": "eslint \"./src/**/*\" --ext .ts --fix"
@@ -42,14 +41,10 @@
     "**/*.d.ts"
   ],
   "pkg": {
-    "scripts": "dist/index.cjs",
-    "assets": [
-      "pubic/**/*"
-    ],
+    "scripts": "dist/index.js",
     "targets": [
       "node18-win-x64"
-    ],
-    "outputPath": "./bin"
+    ]
   },
   "packageManager": "pnpm@9.15.1+sha512.1acb565e6193efbebda772702950469150cf12bcc764262e7587e71d19dc98a423dff9536e57ea44c49bdf790ff694e83c27be5faa23d67e0c033b583be4bfcf"
 }
