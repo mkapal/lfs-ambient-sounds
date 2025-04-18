@@ -2,13 +2,10 @@
   "name": "lfs-ambient-sounds",
   "version": "0.0.0",
   "main": "dist/index.cjs",
-  "bin": "dist/index.cjs",
   "type": "module",
   "scripts": {
-    "dev": "tsx watch src/index.ts",
-    "serve:production": "node ./dist/index.cjs",
-    "build": "tsup src/index.ts",
-    "package": "pkg .",
+    "dev": "bun run ./src/index.ts",
+    "compile": "bun build ./src/index.ts --compile --minify --sourcemap --target=bun-windows-x64 --outfile dist/lfs-ambient-sounds.exe",
     "format": "prettier --write ."
   },
   "dependencies": {
@@ -18,7 +15,6 @@
   },
   "devDependencies": {
     "@types/node": "^22.14.0",
-    "pkg": "^5.8.1",
     "prettier": "^3.5.3",
     "tsup": "^8.4.0",
     "tsx": "^4.19.3",
@@ -27,17 +23,5 @@
   "files": [
     "**/*.js",
     "**/*.d.ts"
-  ],
-  "pkg": {
-    "scripts": "dist/index.cjs",
-    "assets": [
-      "pubic/**/*",
-      "full-icu-data/icudt74l.dat"
-    ],
-    "targets": [
-      "node18-win-x64"
-    ],
-    "outputPath": "."
-  },
-  "packageManager": "pnpm@9.15.1+sha512.1acb565e6193efbebda772702950469150cf12bcc764262e7587e71d19dc98a423dff9536e57ea44c49bdf790ff694e83c27be5faa23d67e0c033b583be4bfcf"
+  ]
 }

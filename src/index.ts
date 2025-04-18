@@ -1,10 +1,10 @@
-import path from "path";
+import path from "node:path";
 process.env.NODE_ICU_DATA = path.join(__dirname, "full-icu-data");
 console.log({ NODE_ICU_DATA: process.env.NODE_ICU_DATA });
 
 import "./env";
 
-import fs from "fs";
+import fs from "node:fs";
 import { InSimFlags, IS_ISI_ReqI, PacketType } from "node-insim/packets";
 import { InSim } from "node-insim";
 import { AudioContext } from "node-web-audio-api";
