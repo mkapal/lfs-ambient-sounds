@@ -2,7 +2,7 @@
 
 ## Requirements
 
-- [Node.js](https://nodejs.org/) 14 or higher
+- [Node.js](https://nodejs.org/) 18
 
 ## Installation
 
