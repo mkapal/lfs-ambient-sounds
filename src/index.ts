@@ -1,11 +1,13 @@
 import "./env";
 
+import fs from "fs";
 import { InSimFlags, IS_ISI_ReqI, PacketType } from "node-insim/packets";
 import { InSim } from "node-insim";
 import { AudioContext } from "node-web-audio-api";
 
-import fs from "fs";
 import { lfsToMeters } from "./lfsConversions";
+
+console.log("Connecting to InSim");
 
 const inSim = new InSim();
 inSim.connect({
@@ -15,6 +17,10 @@ inSim.connect({
   Flags: InSimFlags.ISF_LOCAL | InSimFlags.ISF_MCI,
   ReqI: IS_ISI_ReqI.SEND_VERSION,
   Interval: 100,
+});
+
+inSim.on("connect", () => {
+  console.log("Connected to InSim");
 });
 
 let viewPLID = 0;
