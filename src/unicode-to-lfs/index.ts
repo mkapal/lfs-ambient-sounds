@@ -1,7 +1,6 @@
-// TODO
 export default function unicodeToLfs(
   value: string,
-  options: {
+  _options: {
     isNullTerminated?: boolean;
     length?: number;
     shouldEscapeSpecialCharacters?: boolean;

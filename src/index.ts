@@ -1,6 +1,7 @@
 import "./env";
 
 import fs from "fs";
+import { InSim } from "node-insim";
 import {
   InSimFlags,
   IS_ISI_ReqI,
@@ -8,7 +9,6 @@ import {
   PacketType,
   TinyType,
 } from "node-insim/packets";
-import { InSim } from "node-insim";
 import { AudioContext } from "node-web-audio-api";
 
 import { lfsToMeters } from "./lfsConversions";
@@ -106,8 +106,12 @@ inSim.on(PacketType.ISP_VER, (packet) => {
 function headingToForwardVector(heading: number) {
   const radians = (heading / 65536) * 2 * Math.PI;
 
-  const forwardZ = -Math.cos(radians); // LFS +Y → WebAudio +Z
-  const forwardX = Math.sin(radians); // LFS +X → WebAudio +X
+  const forwardZ = -Math.cos(radians);
+  const forwardX = Math.sin(radians);
 
-  return { x: forwardX, y: 0, z: forwardZ };
+  return {
+    x: forwardX,
+    y: 0,
+    z: forwardZ,
+  };
 }

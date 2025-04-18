@@ -1,5 +1,5 @@
-import unicodeToLfs from "unicode-to-lfs";
 import parseLFSMessage from "parse-lfs-message";
+import unicodeToLfs from "unicode-to-lfs";
 
 const magic: Record<
   string,
