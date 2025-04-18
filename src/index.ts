@@ -1,5 +1,7 @@
-import "./env";
+import "./title";
+import "./config";
 
+import chalk from "chalk";
 import fs from "fs";
 import { InSim } from "node-insim";
 import {
@@ -13,13 +15,18 @@ import { AudioContext } from "node-web-audio-api";
 
 import { lfsToMeters } from "./lfsConversions";
 
-console.log("LFS Ambient Sounds");
+const host = process.env.HOST ?? "127.0.0.1";
+const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 29999;
+const admin = process.env.ADMIN ?? "";
 
 const inSim = new InSim();
+
+console.log(`Connecting to ${host}:${port}`);
 inSim.connect({
   IName: "Sound",
-  Host: process.env.HOST ?? "127.0.0.1",
-  Port: process.env.PORT ? parseInt(process.env.PORT, 10) : 29999,
+  Host: host,
+  Port: port,
+  Admin: admin,
   Flags: InSimFlags.ISF_LOCAL | InSimFlags.ISF_MCI,
   ReqI: IS_ISI_ReqI.SEND_VERSION,
   Interval: 100,
@@ -36,7 +43,7 @@ inSim.on(PacketType.ISP_VER, (packet) => {
     return;
   }
 
-  console.log("Connected to LFS", packet.Version);
+  console.log("Connected to LFS");
 
   inSim.send(
     new IS_TINY({
@@ -115,3 +122,7 @@ function headingToForwardVector(heading: number) {
     z: forwardZ,
   };
 }
+
+process.on("uncaughtException", (error) => {
+  console.error(chalk.red(error));
+});
