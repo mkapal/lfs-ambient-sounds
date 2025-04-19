@@ -190,6 +190,7 @@ import type { Track } from "./tracks";
         coneInnerAngle,
         coneOuterAngle,
         coneOuterGain,
+        rotation,
       }) => {
         fs.readFile(`sounds/${sound}`, async (err, data) => {
           if (err) {
@@ -212,7 +213,7 @@ import type { Track } from "./tracks";
           source.buffer = buffer;
 
           if (hasPosition) {
-            const rotation = yRotationToVector(100);
+            const orientationVector = yRotationToVector(rotation);
 
             const panner = context.createPanner();
             panner.panningModel = "HRTF";
@@ -222,9 +223,9 @@ import type { Track } from "./tracks";
             panner.positionX.value = x;
             panner.positionY.value = z;
             panner.positionZ.value = y;
-            panner.orientationX.value = rotation.x;
-            panner.orientationY.value = rotation.y;
-            panner.orientationZ.value = rotation.z;
+            panner.orientationX.value = orientationVector.x;
+            panner.orientationY.value = orientationVector.y;
+            panner.orientationZ.value = orientationVector.z;
             panner.coneInnerAngle = coneInnerAngle;
             panner.coneOuterAngle = coneOuterAngle;
             panner.coneOuterGain = coneOuterGain;

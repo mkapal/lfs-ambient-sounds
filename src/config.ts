@@ -20,6 +20,7 @@ const soundConfigSchema = z.object({
   coneInnerAngle: z.number().min(0).max(360).optional().default(360),
   coneOuterAngle: z.number().min(0).max(360).optional().default(0),
   coneOuterGain: z.number().min(0).max(1).optional().default(0),
+  rotation: z.number().min(0).max(360).optional().default(0),
 });
 const trackSchema = z.array(soundConfigSchema).optional().default([]);
 const configSchema = z.object({
