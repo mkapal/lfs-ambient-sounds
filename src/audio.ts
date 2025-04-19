@@ -91,7 +91,7 @@ export function loadSounds(trackSounds: TrackSounds, track: Track) {
 }
 
 export function resumePositionalSounds() {
-  console.log("Resume positional sounds");
+  console.log("Play positional sounds");
   state.positionalAudioContext.resume();
 }
 
@@ -101,7 +101,7 @@ export function pausePositionalSounds() {
 }
 
 export function resumeGlobalSounds() {
-  console.log("Resume global sounds");
+  console.log("Play global sounds");
   state.globalAudioContext.resume();
 }
 
