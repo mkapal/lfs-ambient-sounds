@@ -121,7 +121,11 @@ export function updateListenerPosition({
   z: number;
   heading: number;
 }) {
-  const interpolationTime = 0.2;
+  if (state.positionalAudioContext.state !== "running") {
+    return;
+  }
+
+  const interpolationTime = 0.05;
 
   state.positionalAudioContext.listener.positionX.linearRampToValueAtTime(
     lfsToMeters(x),
@@ -137,6 +141,7 @@ export function updateListenerPosition({
   );
 
   const forwardVector = headingToForwardVector(heading);
+
   state.positionalAudioContext.listener.forwardX.linearRampToValueAtTime(
     forwardVector.x,
     state.positionalAudioContext.currentTime + interpolationTime,
