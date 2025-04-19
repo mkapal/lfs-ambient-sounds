@@ -4,3 +4,6 @@ profiles/*
 !profiles/default
 !profiles/default/*
 config.local.toml
+sounds/*
+!sounds/HORN1.wav
+!sounds/global_street_ambience.mp3

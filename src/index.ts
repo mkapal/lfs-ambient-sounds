@@ -21,6 +21,7 @@ import type { Track } from "./tracks";
 const inSim = new InSim();
 
 console.log(`Connecting to ${config.insim.host}:${config.insim.port}`);
+
 inSim.connect({
   IName: "Sound",
   Host: config.insim.host,
@@ -35,14 +36,14 @@ const state: {
   viewPLID: number;
   camera: ViewIdentifier | null;
   track: Track | null;
-  audioContext: AudioContext;
-  audioSources: AudioBufferSourceNode[];
+  positionalAudioContext: AudioContext;
+  globalAudioContext: AudioContext;
 } = {
   viewPLID: 0,
   camera: null,
   track: null as Track | null,
-  audioContext: new AudioContext(),
-  audioSources: [],
+  positionalAudioContext: new AudioContext(),
+  globalAudioContext: new AudioContext(),
 };
 
 inSim.on(PacketType.ISP_VER, (packet) => {
@@ -73,114 +74,144 @@ inSim.on(PacketType.ISP_STA, (packet) => {
   if (isSessionInProgress && prevCamera !== state.camera) {
     console.log("Camera changed");
     if (state.camera === ViewIdentifier.VIEW_DRIVER) {
-      resume();
+      resumePositionalSounds();
     } else {
-      pause();
+      pausePositionalSounds();
     }
   }
 
   if (prevTrack !== state.track) {
     if (state.track === null) {
-      pause();
+      pausePositionalSounds();
+      pauseGlobalSounds();
     } else {
-      initializeTrackSounds(state.track);
+      loadSounds(state.track);
       if (!isSessionInProgress) {
-        pause();
+        pausePositionalSounds();
+        pauseGlobalSounds();
       }
     }
   }
 });
 
 inSim.on(PacketType.ISP_RST, () => {
-  console.log("Race started");
+  console.log("Session started");
   if (state.track === null) {
     return;
   }
 
   setTimeout(() => {
-    resume();
+    resumePositionalSounds();
+    resumeGlobalSounds();
   }, 1000);
 });
 
 inSim.on(PacketType.ISP_TINY, (packet) => {
   if (packet.SubT === TinyType.TINY_REN) {
-    pause();
+    console.log("Session ended");
+    pausePositionalSounds();
+    pauseGlobalSounds();
   }
 });
 
 inSim.on(PacketType.ISP_MCI, (packet) => {
   packet.Info.forEach((info) => {
     if (info.PLID === state.viewPLID) {
-      state.audioContext.listener.positionX.value = lfsToMeters(info.X);
-      state.audioContext.listener.positionY.value = lfsToMeters(info.Z);
-      state.audioContext.listener.positionZ.value = lfsToMeters(info.Y);
+      state.positionalAudioContext.listener.positionX.value = lfsToMeters(
+        info.X,
+      );
+      state.positionalAudioContext.listener.positionY.value = lfsToMeters(
+        info.Z,
+      );
+      state.positionalAudioContext.listener.positionZ.value = lfsToMeters(
+        info.Y,
+      );
 
       const forwardVector = headingToForwardVector(info.Heading);
-      state.audioContext.listener.forwardX.value = forwardVector.x;
-      state.audioContext.listener.forwardY.value = forwardVector.y;
-      state.audioContext.listener.forwardZ.value = forwardVector.z;
+      state.positionalAudioContext.listener.forwardX.value = forwardVector.x;
+      state.positionalAudioContext.listener.forwardY.value = forwardVector.y;
+      state.positionalAudioContext.listener.forwardZ.value = forwardVector.z;
     }
   });
 });
 
-function initializeTrackSounds(track: Track) {
-  state.audioSources = [];
-
+function loadSounds(track: Track) {
   console.log(`Load sounds for track: ${track}`);
 
   // Reset listener position
-  state.audioContext.listener.positionX.value = 0;
-  state.audioContext.listener.positionY.value = 0;
-  state.audioContext.listener.positionZ.value = 0;
-  state.audioContext.listener.forwardX.value = 0;
-  state.audioContext.listener.forwardY.value = 0;
-  state.audioContext.listener.forwardZ.value = -1;
-  state.audioContext.listener.upX.value = 0;
-  state.audioContext.listener.upY.value = 1;
-  state.audioContext.listener.upZ.value = 0;
+  state.positionalAudioContext.listener.positionX.value = 0;
+  state.positionalAudioContext.listener.positionY.value = 0;
+  state.positionalAudioContext.listener.positionZ.value = 0;
+  state.positionalAudioContext.listener.forwardX.value = 0;
+  state.positionalAudioContext.listener.forwardY.value = 0;
+  state.positionalAudioContext.listener.forwardZ.value = -1;
+  state.positionalAudioContext.listener.upX.value = 0;
+  state.positionalAudioContext.listener.upY.value = 1;
+  state.positionalAudioContext.listener.upZ.value = 0;
 
-  trackSounds[track].forEach(({ x, y, z, sound }) => {
+  trackSounds[track].forEach(({ sound, x, y, z, refDistance, maxDistance }) => {
     fs.readFile(`sounds/${sound}`, async (err, data) => {
       if (err) {
         console.log(err);
         return;
       }
 
-      const buffer = await state.audioContext.decodeAudioData(data.buffer);
-      console.log(`Sound loaded: ${sound}`);
+      const hasPosition = x !== undefined && y !== undefined && z !== undefined;
+      const context = hasPosition
+        ? state.positionalAudioContext
+        : state.globalAudioContext;
+      const buffer = await context.decodeAudioData(data.buffer);
 
-      const source = state.audioContext.createBufferSource();
-      state.audioSources.push(source);
+      console.log(
+        `Sound loaded (${hasPosition ? "positional" : "global"}): ${sound}`,
+      );
+
+      const source = context.createBufferSource();
       source.buffer = buffer;
 
-      const panner = state.audioContext.createPanner();
-      panner.panningModel = "HRTF";
-      panner.distanceModel = "inverse";
-      panner.refDistance = 3;
-      panner.rolloffFactor = 1.5;
-      panner.maxDistance = 100;
-      panner.positionX.value = x;
-      panner.positionY.value = z;
-      panner.positionZ.value = y;
-      panner.orientationX.value = 1;
-      panner.orientationY.value = 0;
-      panner.orientationZ.value = 0;
+      if (hasPosition) {
+        const panner = context.createPanner();
+        panner.panningModel = "HRTF";
+        panner.distanceModel = "inverse";
+        panner.refDistance = refDistance;
+        panner.rolloffFactor = 1.5;
+        panner.maxDistance = maxDistance;
+        panner.positionX.value = x;
+        panner.positionY.value = z;
+        panner.positionZ.value = y;
+        panner.orientationX.value = 1;
+        panner.orientationY.value = 0;
+        panner.orientationZ.value = 0;
 
-      source.connect(panner).connect(state.audioContext.destination);
+        source.connect(panner).connect(context.destination);
+      } else {
+        source.connect(context.destination);
+      }
+
       source.loop = true;
       source.start();
     });
   });
 }
 
-function resume() {
-  console.log("Resume");
-  state.audioContext.resume();
+function resumePositionalSounds() {
+  console.log("Resume positional sounds");
+  state.positionalAudioContext.resume();
 }
 
-function pause() {
-  console.log("Pause");
-  state.audioContext.suspend();
+function pausePositionalSounds() {
+  console.log("Pause positional sounds");
+  state.positionalAudioContext.suspend();
+}
+
+function resumeGlobalSounds() {
+  console.log("Resume global sounds");
+  state.globalAudioContext.resume();
+}
+
+function pauseGlobalSounds() {
+  console.log("Pause global sounds");
+  state.globalAudioContext.suspend();
 }
 
 function headingToForwardVector(heading: number) {

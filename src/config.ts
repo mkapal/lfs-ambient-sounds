@@ -9,14 +9,16 @@ import { tomlAdapter } from "zod-config/toml-adapter";
 import type { Track } from "./tracks";
 import { tracks } from "./tracks";
 
-const coordinateSchema = z.number().min(-32768).max(32767);
-const soundLocationSchema = z.object({
+const coordinateSchema = z.number().min(-32768).max(32767).optional();
+const soundConfigSchema = z.object({
+  sound: z.string().min(1),
   x: coordinateSchema,
   y: coordinateSchema,
   z: coordinateSchema,
-  sound: z.string().min(1),
+  refDistance: z.number().min(0).max(4096).optional().default(3),
+  maxDistance: z.number().min(0).max(4096).optional().default(100),
 });
-const trackSchema = z.array(soundLocationSchema).optional().default([]);
+const trackSchema = z.array(soundConfigSchema).optional().default([]);
 const configSchema = z.object({
   insim: z.object({
     host: z.string().min(1).optional().default("127.0.0.1"),

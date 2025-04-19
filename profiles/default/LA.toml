@@ -1,3 +1,4 @@
 LA = [
-  { x = 0, y = 0, z = 2, sound = 'birds.wav' },
+  { sound = 'global_street_ambience.mp3' },
+  { sound = 'HORN1.wav', x = 0, y = 0, z = 2, refDistance = 3, maxDistance = 200 },
 ]
