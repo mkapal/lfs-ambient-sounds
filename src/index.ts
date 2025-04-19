@@ -3,7 +3,6 @@ import "./title";
 import chalk from "chalk";
 import fs from "fs";
 import { InSim } from "node-insim";
-import { ViewIdentifier } from "node-insim/packets";
 import {
   InSimFlags,
   IS_ISI_ReqI,
@@ -11,6 +10,7 @@ import {
   PacketType,
   RaceState,
   TinyType,
+  ViewIdentifier,
 } from "node-insim/packets";
 import { AudioContext } from "node-web-audio-api";
 
@@ -76,7 +76,11 @@ import type { Track } from "./tracks";
 
     if (isSessionInProgress && prevCamera !== state.camera) {
       console.log("Camera changed");
-      if (state.camera === ViewIdentifier.VIEW_DRIVER) {
+      if (
+        [ViewIdentifier.VIEW_DRIVER, ViewIdentifier.VIEW_CUSTOM].includes(
+          state.camera,
+        )
+      ) {
         resumePositionalSounds();
       } else {
         pausePositionalSounds();
