@@ -1,4 +1,5 @@
 import fs from "fs";
+import { AudioContext } from "node-web-audio-api";
 
 import type { TrackSounds } from "./config";
 import {
@@ -11,6 +12,9 @@ import type { Track } from "./tracks";
 
 export function loadSounds(trackSounds: TrackSounds, track: Track) {
   console.log(`Load sounds for track: ${track}`);
+
+  state.positionalAudioContext = new AudioContext();
+  state.globalAudioContext = new AudioContext();
 
   // Reset listener position
   state.positionalAudioContext.listener.positionX.value = 0;
@@ -82,6 +86,9 @@ export function loadSounds(trackSounds: TrackSounds, track: Track) {
         } else {
           source.connect(gainRef).connect(context.destination);
         }
+
+        state.positionalAudioContext.suspend();
+        state.globalAudioContext.suspend();
 
         source.loop = true;
         source.start();
