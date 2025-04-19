@@ -39,6 +39,8 @@ const configSchema = z.object({
   }),
 });
 
+export type TrackSounds = Record<Track, z.output<typeof trackSchema>>;
+
 export async function loadConfig() {
   const config = await loadZodConfig({
     schema: configSchema,
@@ -65,7 +67,7 @@ export async function loadConfig() {
   console.log("Configuration loaded");
   console.log(`Profile: ${config.sounds.profile}`);
 
-  const trackSounds: Record<Track, z.output<typeof trackSchema>> = {
+  const trackSounds: TrackSounds = {
     BL: [],
     SO: [],
     FE: [],

@@ -1,0 +1,148 @@
+import fs from "fs";
+
+import type { TrackSounds } from "./config";
+import {
+  headingToForwardVector,
+  lfsToMeters,
+  yRotationToVector,
+} from "./conversions";
+import { state } from "./state";
+import type { Track } from "./tracks";
+
+export function loadSounds(trackSounds: TrackSounds, track: Track) {
+  console.log(`Load sounds for track: ${track}`);
+
+  // Reset listener position
+  state.positionalAudioContext.listener.positionX.value = 0;
+  state.positionalAudioContext.listener.positionY.value = 0;
+  state.positionalAudioContext.listener.positionZ.value = 0;
+  state.positionalAudioContext.listener.forwardX.value = 0;
+  state.positionalAudioContext.listener.forwardY.value = 0;
+  state.positionalAudioContext.listener.forwardZ.value = -1;
+  state.positionalAudioContext.listener.upX.value = 0;
+  state.positionalAudioContext.listener.upY.value = 1;
+  state.positionalAudioContext.listener.upZ.value = 0;
+
+  trackSounds[track].forEach(
+    ({
+      sound,
+      x,
+      y,
+      z,
+      refDistance,
+      maxDistance,
+      coneInnerAngle,
+      coneOuterAngle,
+      coneOuterGain,
+      rotation,
+    }) => {
+      fs.readFile(`sounds/${sound}`, async (err, data) => {
+        if (err) {
+          console.log(err);
+          return;
+        }
+
+        const hasPosition =
+          x !== undefined && y !== undefined && z !== undefined;
+        const context = hasPosition
+          ? state.positionalAudioContext
+          : state.globalAudioContext;
+        const buffer = await context.decodeAudioData(data.buffer);
+
+        console.log(
+          `Sound loaded (${hasPosition ? "positional" : "global"}): ${sound}`,
+        );
+
+        const source = context.createBufferSource();
+        source.buffer = buffer;
+
+        if (hasPosition) {
+          const orientationVector = yRotationToVector(rotation);
+
+          const panner = context.createPanner();
+          panner.panningModel = "HRTF";
+          panner.rolloffFactor = 1.5;
+          panner.refDistance = refDistance;
+          panner.maxDistance = maxDistance;
+          panner.positionX.value = x;
+          panner.positionY.value = z;
+          panner.positionZ.value = y;
+          panner.orientationX.value = orientationVector.x;
+          panner.orientationY.value = orientationVector.y;
+          panner.orientationZ.value = orientationVector.z;
+          panner.coneInnerAngle = coneInnerAngle;
+          panner.coneOuterAngle = coneOuterAngle;
+          panner.coneOuterGain = coneOuterGain;
+
+          source.connect(panner).connect(context.destination);
+        } else {
+          source.connect(context.destination);
+        }
+
+        source.loop = true;
+        source.start();
+      });
+    },
+  );
+}
+
+export function resumePositionalSounds() {
+  console.log("Resume positional sounds");
+  state.positionalAudioContext.resume();
+}
+
+export function pausePositionalSounds() {
+  console.log("Pause positional sounds");
+  state.positionalAudioContext.suspend();
+}
+
+export function resumeGlobalSounds() {
+  console.log("Resume global sounds");
+  state.globalAudioContext.resume();
+}
+
+export function pauseGlobalSounds() {
+  console.log("Pause global sounds");
+  state.globalAudioContext.suspend();
+}
+
+export function updateListenerPosition({
+  x,
+  y,
+  z,
+  heading,
+}: {
+  x: number;
+  y: number;
+  z: number;
+  heading: number;
+}) {
+  const interpolationTime = 0.2;
+
+  state.positionalAudioContext.listener.positionX.linearRampToValueAtTime(
+    lfsToMeters(x),
+    state.positionalAudioContext.currentTime + interpolationTime,
+  );
+  state.positionalAudioContext.listener.positionY.linearRampToValueAtTime(
+    lfsToMeters(z),
+    state.positionalAudioContext.currentTime + interpolationTime,
+  );
+  state.positionalAudioContext.listener.positionZ.linearRampToValueAtTime(
+    lfsToMeters(y),
+    state.positionalAudioContext.currentTime + interpolationTime,
+  );
+
+  const forwardVector = headingToForwardVector(heading);
+  state.positionalAudioContext.listener.forwardX.linearRampToValueAtTime(
+    forwardVector.x,
+    state.positionalAudioContext.currentTime + interpolationTime,
+  );
+  state.positionalAudioContext.listener.forwardY.linearRampToValueAtTime(
+    forwardVector.y,
+    state.positionalAudioContext.currentTime + interpolationTime,
+  );
+  state.positionalAudioContext.listener.forwardZ.linearRampToValueAtTime(
+    forwardVector.z,
+    state.positionalAudioContext.currentTime + interpolationTime,
+  );
+}
