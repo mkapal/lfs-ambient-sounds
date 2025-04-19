@@ -117,20 +117,47 @@ inSim.on(PacketType.ISP_TINY, (packet) => {
 inSim.on(PacketType.ISP_MCI, (packet) => {
   packet.Info.forEach((info) => {
     if (info.PLID === state.viewPLID) {
-      state.positionalAudioContext.listener.positionX.value = lfsToMeters(
-        info.X,
+      // state.positionalAudioContext.listener.positionX.value = lfsToMeters(
+      //   info.X,
+      // );
+      // state.positionalAudioContext.listener.positionY.value = lfsToMeters(
+      //   info.Z,
+      // );
+      // state.positionalAudioContext.listener.positionZ.value = lfsToMeters(
+      //   info.Y,
+      // );
+
+      const interpolationTime = 0.2;
+      state.positionalAudioContext.listener.positionX.linearRampToValueAtTime(
+        lfsToMeters(info.X),
+        state.positionalAudioContext.currentTime + interpolationTime,
       );
-      state.positionalAudioContext.listener.positionY.value = lfsToMeters(
-        info.Z,
+      state.positionalAudioContext.listener.positionY.linearRampToValueAtTime(
+        lfsToMeters(info.Z),
+        state.positionalAudioContext.currentTime + interpolationTime,
       );
-      state.positionalAudioContext.listener.positionZ.value = lfsToMeters(
-        info.Y,
+      state.positionalAudioContext.listener.positionZ.linearRampToValueAtTime(
+        lfsToMeters(info.Y),
+        state.positionalAudioContext.currentTime + interpolationTime,
       );
 
       const forwardVector = headingToForwardVector(info.Heading);
-      state.positionalAudioContext.listener.forwardX.value = forwardVector.x;
-      state.positionalAudioContext.listener.forwardY.value = forwardVector.y;
-      state.positionalAudioContext.listener.forwardZ.value = forwardVector.z;
+      // state.positionalAudioContext.listener.forwardX.value = forwardVector.x;
+      // state.positionalAudioContext.listener.forwardY.value = forwardVector.y;
+      // state.positionalAudioContext.listener.forwardZ.value = forwardVector.z;
+
+      state.positionalAudioContext.listener.forwardX.linearRampToValueAtTime(
+        forwardVector.x,
+        state.positionalAudioContext.currentTime + interpolationTime,
+      );
+      state.positionalAudioContext.listener.forwardY.linearRampToValueAtTime(
+        forwardVector.y,
+        state.positionalAudioContext.currentTime + interpolationTime,
+      );
+      state.positionalAudioContext.listener.forwardZ.linearRampToValueAtTime(
+        forwardVector.z,
+        state.positionalAudioContext.currentTime + interpolationTime,
+      );
     }
   });
 });
@@ -149,49 +176,66 @@ function loadSounds(track: Track) {
   state.positionalAudioContext.listener.upY.value = 1;
   state.positionalAudioContext.listener.upZ.value = 0;
 
-  trackSounds[track].forEach(({ sound, x, y, z, refDistance, maxDistance }) => {
-    fs.readFile(`sounds/${sound}`, async (err, data) => {
-      if (err) {
-        console.log(err);
-        return;
-      }
+  trackSounds[track].forEach(
+    ({
+      sound,
+      x,
+      y,
+      z,
+      refDistance,
+      maxDistance,
+      coneInnerAngle,
+      coneOuterAngle,
+      coneOuterGain,
+    }) => {
+      fs.readFile(`sounds/${sound}`, async (err, data) => {
+        if (err) {
+          console.log(err);
+          return;
+        }
 
-      const hasPosition = x !== undefined && y !== undefined && z !== undefined;
-      const context = hasPosition
-        ? state.positionalAudioContext
-        : state.globalAudioContext;
-      const buffer = await context.decodeAudioData(data.buffer);
+        const hasPosition =
+          x !== undefined && y !== undefined && z !== undefined;
+        const context = hasPosition
+          ? state.positionalAudioContext
+          : state.globalAudioContext;
+        const buffer = await context.decodeAudioData(data.buffer);
 
-      console.log(
-        `Sound loaded (${hasPosition ? "positional" : "global"}): ${sound}`,
-      );
+        console.log(
+          `Sound loaded (${hasPosition ? "positional" : "global"}): ${sound}`,
+        );
 
-      const source = context.createBufferSource();
-      source.buffer = buffer;
+        const source = context.createBufferSource();
+        source.buffer = buffer;
 
-      if (hasPosition) {
-        const panner = context.createPanner();
-        panner.panningModel = "HRTF";
-        panner.distanceModel = "inverse";
-        panner.refDistance = refDistance;
-        panner.rolloffFactor = 1.5;
-        panner.maxDistance = maxDistance;
-        panner.positionX.value = x;
-        panner.positionY.value = z;
-        panner.positionZ.value = y;
-        panner.orientationX.value = 1;
-        panner.orientationY.value = 0;
-        panner.orientationZ.value = 0;
+        if (hasPosition) {
+          const rotation = yRotationToVector(100);
 
-        source.connect(panner).connect(context.destination);
-      } else {
-        source.connect(context.destination);
-      }
+          const panner = context.createPanner();
+          panner.panningModel = "HRTF";
+          panner.rolloffFactor = 1.5;
+          panner.refDistance = refDistance;
+          panner.maxDistance = maxDistance;
+          panner.positionX.value = x;
+          panner.positionY.value = z;
+          panner.positionZ.value = y;
+          panner.orientationX.value = rotation.x;
+          panner.orientationY.value = rotation.y;
+          panner.orientationZ.value = rotation.z;
+          panner.coneInnerAngle = coneInnerAngle;
+          panner.coneOuterAngle = coneOuterAngle;
+          panner.coneOuterGain = coneOuterGain;
 
-      source.loop = true;
-      source.start();
-    });
-  });
+          source.connect(panner).connect(context.destination);
+        } else {
+          source.connect(context.destination);
+        }
+
+        source.loop = true;
+        source.start();
+      });
+    },
+  );
 }
 
 function resumePositionalSounds() {
@@ -224,6 +268,24 @@ function headingToForwardVector(heading: number) {
     x: forwardX,
     y: 0,
     z: forwardZ,
+  };
+}
+
+// this utility converts amount of rotation around the Y axis
+// (i.e. rotation in the 'horizontal plane') to an orientation vector
+function yRotationToVector(degrees: number) {
+  // convert degrees to radians and offset the angle so 0 points towards the listener
+  const radians = (degrees - 90) * (Math.PI / 180);
+  // using cosine and sine here ensures the output values are always normalized
+  // i.e. they range between -1 and 1
+  const x = Math.cos(radians);
+  const z = Math.sin(radians);
+
+  // we hard-code the Y component to 0, as Y is the axis of rotation
+  return {
+    x,
+    y: 0,
+    z,
   };
 }
 

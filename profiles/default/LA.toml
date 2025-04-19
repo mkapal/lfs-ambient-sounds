@@ -1,4 +1,5 @@
 LA = [
   { sound = 'global_street_ambience.mp3' },
-  { sound = 'HORN1.wav', x = 0, y = 0, z = 2, refDistance = 3, maxDistance = 200 },
+  { sound = 'WindExternal.wav', x = 0, y = 0, z = 2 },
+  { sound = 'SirenSlow.wav', x = 10, y = 10, z = 2, refDistance = 2.5, maxDistance = 150, coneInnerAngle = 90, coneOuterAngle = 180, coneOuterGain = 0 },
 ]

@@ -5,5 +5,6 @@ profiles/*
 !profiles/default/*
 config.local.toml
 sounds/*
-!sounds/HORN1.wav
+!sounds/SirenSlow.wav
+!sounds/WindExternal.wav
 !sounds/global_street_ambience.mp3
