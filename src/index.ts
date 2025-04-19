@@ -8,6 +8,7 @@ import {
   IS_TINY,
   PacketType,
   RaceState,
+  StateFlags,
   TinyType,
   ViewIdentifier,
 } from "node-insim/packets";
@@ -65,14 +66,17 @@ import type { Track } from "./tracks";
 
     const isSessionInProgress = packet.RaceInProg !== RaceState.NO_RACE;
 
-    if (isSessionInProgress && prevCamera !== state.camera) {
-      console.log("Camera changed");
+    if (isSessionInProgress) {
       const inCarCameras = [
         ViewIdentifier.VIEW_DRIVER,
         ViewIdentifier.VIEW_CUSTOM,
       ];
 
-      if (inCarCameras.includes(state.camera)) {
+      if (
+        inCarCameras.includes(state.camera) &&
+        (prevCamera !== state.camera ||
+          (packet.Flags & StateFlags.ISS_SHIFTU) === 0)
+      ) {
         resumePositionalSounds();
       } else {
         pausePositionalSounds();
