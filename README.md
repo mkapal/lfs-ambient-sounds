@@ -22,5 +22,10 @@ The app connects to `127.0.0.1:29999` by default.
 
 ```shell
 pnpm build
-pnpm serve:production
 ```
+
+## Development
+
+### Custom configuration
+
+Copy `config.toml` to `config.local.toml`, it will take precedence.

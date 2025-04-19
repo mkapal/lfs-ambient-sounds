@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "tsup src/index.ts && pkg -o dist/bin/LFS-Ambient-Sounds.exe . && cp -R sound dist/bin/",
+    "build": "tsup src/index.ts && pkg -o dist/bin/LFS-Ambient-Sounds.exe . && cp -R sounds dist/bin/",
     "format": "prettier --write .",
     "lint": "eslint \"./src/**/*\" --ext .ts",
     "lint:fix": "eslint \"./src/**/*\" --ext .ts --fix"
