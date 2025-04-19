@@ -6,13 +6,13 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "tsup src/index.ts && pkg -o dist/bin/LFS-Ambient-Sounds.exe . && cp -R sounds dist/bin/",
+    "build": "tsup src/index.ts && pkg -o \"dist/bin/LFS Ambient Sounds.exe\" . && cp config.toml dist/bin/ && cp -R sounds dist/bin/ && cp -R profiles/ dist/bin/profiles/",
     "format": "prettier --write .",
     "lint": "eslint \"./src/**/*\" --ext .ts",
     "lint:fix": "eslint \"./src/**/*\" --ext .ts --fix"
   },
   "dependencies": {
-    "chalk": "^5.4.1",
+    "chalk": "^4.1.2",
     "debug": "^4.3.4",
     "dotenv": "^16.5.0",
     "lodash": "^4.17.21",

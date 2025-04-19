@@ -3,7 +3,7 @@ import * as process from "node:process";
 
 import chalk from "chalk";
 import { z } from "zod";
-import { loadConfig } from "zod-config";
+import { loadConfig as loadZodConfig } from "zod-config";
 import { tomlAdapter } from "zod-config/toml-adapter";
 
 import type { Track } from "./tracks";
@@ -38,56 +38,20 @@ const configSchema = z.object({
   }),
 });
 
-export const config = await loadConfig({
-  schema: configSchema,
-  adapters: [
-    tomlAdapter({
-      path: path.join(process.cwd(), "config.toml"),
-    }),
-    tomlAdapter({
-      path: path.join(process.cwd(), "config.local.toml"),
-      silent: true,
-    }),
-  ],
-  onError: (error) => {
-    console.error(chalk.red("Error loading configuration:"));
-    console.error(
-      error.errors
-        .map((e) => `- ${e.path.join(" -> ")}: ${e.message}`)
-        .join("\n"),
-    );
-    process.exit(1);
-  },
-});
-
-console.log("Configuration loaded");
-console.log(`Profile: ${config.sounds.profile}`);
-
-export const trackSounds: Record<Track, z.output<typeof trackSchema>> = {
-  BL: [],
-  SO: [],
-  FE: [],
-  AU: [],
-  KY: [],
-  AS: [],
-  WE: [],
-  RO: [],
-  LA: [],
-};
-
-tracks.forEach(async (track) => {
-  const soundProfile = await loadConfig({
-    schema: z.object({
-      [track]: trackSchema,
-    }),
-    adapters: tomlAdapter({
-      path: path.join(
-        process.cwd(),
-        `profiles/${config.sounds.profile}/${track}.toml`,
-      ),
-    }),
+export async function loadConfig() {
+  const config = await loadZodConfig({
+    schema: configSchema,
+    adapters: [
+      tomlAdapter({
+        path: path.join(process.cwd(), "config.toml"),
+      }),
+      tomlAdapter({
+        path: path.join(process.cwd(), "config.local.toml"),
+        silent: true,
+      }),
+    ],
     onError: (error) => {
-      console.error(chalk.red("Error loading sound profile:"));
+      console.error(chalk.red("Error loading configuration:"));
       console.error(
         error.errors
           .map((e) => `- ${e.path.join(" -> ")}: ${e.message}`)
@@ -97,12 +61,55 @@ tracks.forEach(async (track) => {
     },
   });
 
-  const numSounds = soundProfile[track].length;
-  if (numSounds > 0) {
-    console.log(
-      `Loaded ${track} sound profile with ${numSounds} sound${numSounds !== 1 ? "s" : ""}`,
-    );
+  console.log("Configuration loaded");
+  console.log(`Profile: ${config.sounds.profile}`);
+
+  const trackSounds: Record<Track, z.output<typeof trackSchema>> = {
+    BL: [],
+    SO: [],
+    FE: [],
+    AU: [],
+    KY: [],
+    AS: [],
+    WE: [],
+    RO: [],
+    LA: [],
+  };
+
+  for (const track of tracks) {
+    const soundProfile = await loadZodConfig({
+      schema: z.object({
+        [track]: trackSchema,
+      }),
+      adapters: tomlAdapter({
+        path: path.join(
+          process.cwd(),
+          `profiles/${config.sounds.profile}/${track}.toml`,
+        ),
+      }),
+      onError: (error) => {
+        console.error(chalk.red("Error loading sound profile:"));
+        console.error(
+          error.errors
+            .map((e) => `- ${e.path.join(" -> ")}: ${e.message}`)
+            .join("\n"),
+        );
+        process.exit(1);
+      },
+    });
+
+    const numSounds = soundProfile[track].length;
+    if (numSounds > 0) {
+      console.log(
+        `Loaded ${track} sound profile with ${numSounds} sound${numSounds !== 1 ? "s" : ""}`,
+      );
+    }
+
+    trackSounds[track] = soundProfile[track];
   }
 
-  trackSounds[track] = soundProfile[track];
-});
+  return {
+    config,
+    trackSounds,
+  };
+}
