@@ -34,7 +34,7 @@ export function loadSounds(trackSounds: TrackSounds, track: Track) {
       y,
       z,
       refDistance,
-      maxDistance,
+      rolloffFactor,
       gain,
       coneInnerAngle,
       coneOuterAngle,
@@ -68,10 +68,10 @@ export function loadSounds(trackSounds: TrackSounds, track: Track) {
           const orientationVector = yRotationToVector(rotation);
 
           const panner = context.createPanner();
+
           panner.panningModel = "HRTF";
-          panner.rolloffFactor = 1.5;
+          panner.rolloffFactor = rolloffFactor;
           panner.refDistance = refDistance;
-          panner.maxDistance = maxDistance;
           panner.positionX.value = x;
           panner.positionY.value = z;
           panner.positionZ.value = y;

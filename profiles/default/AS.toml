@@ -1,3 +1,12 @@
-AS = [
-
-]
+#[[AS]]
+#sound = "WindExternal.wav"
+#x = 0
+#y = 0
+#z = 2
+#refDistance = 1
+#rolloffFactor = 1
+#gain = 1
+#coneInnerAngle = 90
+#coneOuterAngle = 180
+#coneOuterGain = 0
+#rotation = 90

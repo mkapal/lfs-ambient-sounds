@@ -1,7 +1,7 @@
 [insim]
 host = "127.0.0.1"
 port = 29999
-admin = ''
+admin = ""
 
 [sounds]
-profile = 'default'
+profile = "default"
