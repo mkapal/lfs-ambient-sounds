@@ -17,6 +17,7 @@ const soundConfigSchema = z.object({
   z: coordinateSchema,
   refDistance: z.number().min(0).max(4096).optional().default(3),
   maxDistance: z.number().min(0).max(4096).optional().default(100),
+  gain: z.number().min(0).max(10).optional().default(1),
   coneInnerAngle: z.number().min(0).max(360).optional().default(360),
   coneOuterAngle: z.number().min(0).max(360).optional().default(0),
   coneOuterGain: z.number().min(0).max(1).optional().default(0),

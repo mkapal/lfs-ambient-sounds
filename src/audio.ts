@@ -31,6 +31,7 @@ export function loadSounds(trackSounds: TrackSounds, track: Track) {
       z,
       refDistance,
       maxDistance,
+      gain,
       coneInnerAngle,
       coneOuterAngle,
       coneOuterGain,
@@ -56,6 +57,9 @@ export function loadSounds(trackSounds: TrackSounds, track: Track) {
         const source = context.createBufferSource();
         source.buffer = buffer;
 
+        const gainRef = context.createGain();
+        gainRef.gain.value = gain;
+
         if (hasPosition) {
           const orientationVector = yRotationToVector(rotation);
 
@@ -74,9 +78,9 @@ export function loadSounds(trackSounds: TrackSounds, track: Track) {
           panner.coneOuterAngle = coneOuterAngle;
           panner.coneOuterGain = coneOuterGain;
 
-          source.connect(panner).connect(context.destination);
+          source.connect(gainRef).connect(panner).connect(context.destination);
         } else {
-          source.connect(context.destination);
+          source.connect(gainRef).connect(context.destination);
         }
 
         source.loop = true;
