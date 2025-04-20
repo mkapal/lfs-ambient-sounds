@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "tsup src/index.ts && pkg -o \"dist/bin/LFS Ambient Sounds.exe\" . && cp config.toml dist/bin/ && cp -R sounds dist/bin/ && cp -R profiles/ dist/bin/profiles/",
+    "build": "tsup --clean src/index.ts && pkg -o \"dist/bin/LFS Ambient Sounds.exe\" . && cp config.toml dist/bin/ && cp -R sounds dist/bin/ && cp -R profiles/ dist/bin/profiles/",
     "format": "prettier --write .",
     "lint": "eslint \"./src/**/*\" --ext .ts",
     "lint:fix": "eslint \"./src/**/*\" --ext .ts --fix"
