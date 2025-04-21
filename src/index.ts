@@ -23,11 +23,11 @@ import {
 } from "./audio";
 import { loadConfig } from "./config";
 import { state } from "./state";
-import { loadTrackSounds } from "./tracks";
+import { loadTrackSoundConfigs } from "./tracks";
 
 (async function () {
   const config = await loadConfig();
-  const trackSounds = await loadTrackSounds(config.sounds.profile);
+  const soundConfig = await loadTrackSoundConfigs(config.sounds.profile);
 
   console.log(`Connecting to ${config.insim.host}:${config.insim.port}`);
 
@@ -89,7 +89,7 @@ import { loadTrackSounds } from "./tracks";
         pausePositionalSounds();
         pauseGlobalSounds();
       } else {
-        loadSounds(trackSounds, state.track);
+        loadSounds(soundConfig, state.track);
 
         if (!isSessionInProgress) {
           pausePositionalSounds();

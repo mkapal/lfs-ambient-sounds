@@ -25,18 +25,21 @@ const soundConfigSchema = z
   .strict();
 const trackSchema = z.array(soundConfigSchema).optional().default([]);
 
-export type TrackSounds = Record<string, z.output<typeof soundConfigSchema>[]>;
+export type TrackSoundConfig = Record<
+  string,
+  z.output<typeof soundConfigSchema>[]
+>;
 
-export async function loadTrackSounds(profile: string) {
-  const tomlPattern = new RegExp(
+export async function loadTrackSoundConfigs(profile: string) {
+  const filePattern = new RegExp(
     String.raw`^([A-Z]{2}[\dRXY]?)(?:_${profile})?\.toml$`,
   );
   const tracksDir = path.join(process.cwd(), "tracks");
   const files = fs
     .readdirSync(tracksDir)
-    .filter((file) => file.endsWith(".toml") && tomlPattern.test(file));
+    .filter((file) => file.endsWith(".toml") && filePattern.test(file));
 
-  const trackSounds: TrackSounds = {};
+  const trackSounds: TrackSoundConfig = {};
 
   for (const file of files) {
     const config = await loadZodConfig({
@@ -58,7 +61,7 @@ export async function loadTrackSounds(profile: string) {
         process.exit(1);
       },
     });
-    const track = file.match(tomlPattern)?.[1];
+    const track = file.match(filePattern)?.[1];
 
     if (!track) {
       continue;

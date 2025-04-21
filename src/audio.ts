@@ -8,9 +8,9 @@ import {
   yRotationToVector,
 } from "./conversions";
 import { state } from "./state";
-import type { TrackSounds } from "./tracks";
+import type { TrackSoundConfig } from "./tracks";
 
-export function loadSounds(trackSounds: TrackSounds, track: string) {
+export function loadSounds(soundConfig: TrackSoundConfig, track: string) {
   console.log(`Load sounds for track: ${track}`);
 
   state.positionalAudioContext = new AudioContext();
@@ -27,10 +27,10 @@ export function loadSounds(trackSounds: TrackSounds, track: string) {
   state.positionalAudioContext.listener.upY.value = 1;
   state.positionalAudioContext.listener.upZ.value = 0;
 
-  const trackSoundsForTrack = trackSounds[track] ?? [];
-  const trackSoundsForTrackConfig = trackSounds[track.substring(0, 2)] ?? [];
+  const soundsForTrack = soundConfig[track] ?? [];
+  const soundsForTrackConfig = soundConfig[track.substring(0, 2)] ?? [];
 
-  [...trackSoundsForTrack, ...trackSoundsForTrackConfig].forEach(
+  [...soundsForTrack, ...soundsForTrackConfig].forEach(
     ({
       file,
       x,
