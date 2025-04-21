@@ -6,4 +6,4 @@ sounds/*
 !sounds/WindExternal.wav
 !sounds/global_street_ambience.mp3
 tracks/*
-!tracks/*.example
+!tracks/LA.toml

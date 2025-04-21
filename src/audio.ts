@@ -32,7 +32,7 @@ export function loadSounds(trackSounds: TrackSounds, track: string) {
 
   [...trackSoundsForTrack, ...trackSoundsForTrackConfig].forEach(
     ({
-      sound,
+      file,
       x,
       y,
       z,
@@ -44,7 +44,7 @@ export function loadSounds(trackSounds: TrackSounds, track: string) {
       coneOuterGain,
       rotation,
     }) => {
-      fs.readFile(`sounds/${sound}`, async (err, data) => {
+      fs.readFile(`sounds/${file}`, async (err, data) => {
         if (err) {
           console.log(err);
           return;
@@ -59,7 +59,7 @@ export function loadSounds(trackSounds: TrackSounds, track: string) {
 
         console.log(
           chalk.green(
-            `${hasPosition ? "Positional" : "Global"} sound loaded: ${sound}`,
+            `${hasPosition ? "Positional" : "Global"} sound loaded: ${file}`,
           ),
         );
 

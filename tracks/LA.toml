@@ -1,0 +1,43 @@
+# This is an example of a track configuration containing with 3 sounds.
+# These sounds will be played when you load any Layout Square configuration.
+#
+# SOUND CONFIGURATION EXAMPLE:
+#
+# [[sound]]             # Insert this header before every sound definition
+# file = "sound.wav"    # a sound file located in the 'sounds' folder
+# gain = 0.3            # relative volume (1 = original volume, 0.5 = half the volume, 2 = twice the volume)
+# x = 0                 # (optional) X coordinate of the sound source (LFS layout object scale - 16 = 1 metre)
+# y = 0                 # (optional) Y coordinate of the sound source (LFS layout object scale - 16 = 1 metre)
+# z = 0                 # (optional) Z coordinate of the sound source (LFS layout object scale - 16 = 1 metre)
+# refDistance = 2       # (optional) The distance at which the sound volume starts decreasing
+# rolloffFactor = 1     # (optional) TBD
+# coneInnerAngle = 90   # (optional) TBD
+# coneOuterAngle = 180  # (optional) TBD
+# coneOuterGain = 0     # (optional) TBD
+# rotation = 90         # (optional) TBD
+
+# A global sound which will be heard from anywhere on track with no spatial direction
+[[sound]]
+file = "global_street_ambience.mp3"
+gain = 0.3
+
+# A positional sound which will be placed in a 3D space relative to the track origin
+[[sound]]
+file = "WindExternal.wav"
+x = 0
+y = 0
+z = 2
+
+# A positional & directional sound which will also have a direction defined by a cone angle
+[[sound]]
+file = "SirenSlow.wav"
+x = 10
+y = 10
+z = 2
+gain = 2
+refDistance = 2
+rolloffFactor = 1
+coneInnerAngle = 90
+coneOuterAngle = 180
+coneOuterGain = 0
+rotation = 90

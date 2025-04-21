@@ -94,6 +94,8 @@ import { loadTrackSounds } from "./tracks";
         if (!isSessionInProgress) {
           pausePositionalSounds();
           pauseGlobalSounds();
+        } else {
+          resumeGlobalSounds();
         }
       }
     }

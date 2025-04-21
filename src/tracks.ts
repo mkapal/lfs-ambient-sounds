@@ -10,7 +10,7 @@ import { tomlAdapter } from "zod-config/toml-adapter";
 const coordinateSchema = z.number().min(-32768).max(32767).optional();
 const soundConfigSchema = z
   .object({
-    sound: z.string().min(1),
+    file: z.string().min(1),
     x: coordinateSchema,
     y: coordinateSchema,
     z: coordinateSchema,
@@ -42,7 +42,7 @@ export async function loadTrackSounds(profile: string) {
     const config = await loadZodConfig({
       schema: z
         .object({
-          sounds: trackSchema,
+          sound: trackSchema,
         })
         .strict(),
       adapters: tomlAdapter({
@@ -65,13 +65,13 @@ export async function loadTrackSounds(profile: string) {
     }
 
     if (trackSounds[track]) {
-      trackSounds[track].push(...config.sounds);
+      trackSounds[track].push(...config.sound);
     } else {
-      trackSounds[track] = config.sounds;
+      trackSounds[track] = config.sound;
     }
     console.log(
       chalk.green(
-        `Track configuration found: ${file} (${config.sounds.length} sound${config.sounds.length === 1 ? "" : "s"})`,
+        `Track configuration found: ${file} (${config.sound.length} sound${config.sound.length === 1 ? "" : "s"})`,
       ),
     );
   }
