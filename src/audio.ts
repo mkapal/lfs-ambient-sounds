@@ -1,16 +1,16 @@
+import chalk from "chalk";
 import fs from "fs";
 import { AudioContext } from "node-web-audio-api";
 
-import type { TrackSounds } from "./config";
 import {
   headingToForwardVector,
   lfsToMeters,
   yRotationToVector,
 } from "./conversions";
 import { state } from "./state";
-import type { Track } from "./tracks";
+import type { TrackSounds } from "./tracks";
 
-export function loadSounds(trackSounds: TrackSounds, track: Track) {
+export function loadSounds(trackSounds: TrackSounds, track: string) {
   console.log(`Load sounds for track: ${track}`);
 
   state.positionalAudioContext = new AudioContext();
@@ -27,7 +27,10 @@ export function loadSounds(trackSounds: TrackSounds, track: Track) {
   state.positionalAudioContext.listener.upY.value = 1;
   state.positionalAudioContext.listener.upZ.value = 0;
 
-  trackSounds[track].forEach(
+  const trackSoundsForTrack = trackSounds[track] ?? [];
+  const trackSoundsForTrackConfig = trackSounds[track.substring(0, 2)] ?? [];
+
+  [...trackSoundsForTrack, ...trackSoundsForTrackConfig].forEach(
     ({
       sound,
       x,
@@ -55,7 +58,9 @@ export function loadSounds(trackSounds: TrackSounds, track: Track) {
         const buffer = await context.decodeAudioData(data.buffer);
 
         console.log(
-          `Sound loaded (${hasPosition ? "positional" : "global"}): ${sound}`,
+          chalk.green(
+            `${hasPosition ? "Positional" : "Global"} sound loaded: ${sound}`,
+          ),
         );
 
         const source = context.createBufferSource();
@@ -98,22 +103,22 @@ export function loadSounds(trackSounds: TrackSounds, track: Track) {
 }
 
 export function resumePositionalSounds() {
-  console.log("Play positional sounds");
+  console.log(`Positional sounds: ${chalk.green("on")}`);
   state.positionalAudioContext.resume();
 }
 
 export function pausePositionalSounds() {
-  console.log("Pause positional sounds");
+  console.log(`Positional sounds: ${chalk.red("off")}`);
   state.positionalAudioContext.suspend();
 }
 
 export function resumeGlobalSounds() {
-  console.log("Play global sounds");
+  console.log(`Global sounds: ${chalk.green("on")}`);
   state.globalAudioContext.resume();
 }
 
 export function pauseGlobalSounds() {
-  console.log("Pause global sounds");
+  console.log(`Global sounds: ${chalk.red("off")}`);
   state.globalAudioContext.suspend();
 }
 

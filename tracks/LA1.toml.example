@@ -1,14 +1,8 @@
-[[LA]]
+[[sounds]]
 sound = "global_street_ambience.mp3"
-gain = 0.2
+gain = 0.3
 
-[[LA]]
-sound = "WindExternal.wav"
-x = 0
-y = 0
-z = 2
-
-[[LA]]
+[[sounds]]
 sound = "SirenSlow.wav"
 x = 10
 y = 10

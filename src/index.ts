@@ -23,10 +23,11 @@ import {
 } from "./audio";
 import { loadConfig } from "./config";
 import { state } from "./state";
-import type { Track } from "./tracks";
+import { loadTrackSounds } from "./tracks";
 
 (async function () {
-  const { config, trackSounds } = await loadConfig();
+  const config = await loadConfig();
+  const trackSounds = await loadTrackSounds(config.sounds.profile);
 
   console.log(`Connecting to ${config.insim.host}:${config.insim.port}`);
 
@@ -46,7 +47,7 @@ import type { Track } from "./tracks";
       return;
     }
 
-    console.log("Connected to LFS");
+    console.log(chalk.green("Connected to LFS"));
 
     inSim.send(
       new IS_TINY({
@@ -62,7 +63,7 @@ import type { Track } from "./tracks";
 
     state.viewPLID = packet.ViewPLID;
     state.camera = packet.InGameCam;
-    state.track = packet.Track.substring(0, 2) as Track;
+    state.track = packet.Track;
 
     const isSessionInProgress = packet.RaceInProg !== RaceState.NO_RACE;
 
