@@ -22,7 +22,7 @@ import {
   updateListenerPosition,
 } from "./audio";
 import { loadConfig } from "./config";
-import { state } from "./state";
+import { gameState } from "./gameState";
 import { loadTrackSoundConfigs } from "./tracks";
 
 (async function () {
@@ -58,12 +58,12 @@ import { loadTrackSoundConfigs } from "./tracks";
   });
 
   inSim.on(PacketType.ISP_STA, (packet) => {
-    const prevTrack = state.track;
-    const prevCamera = state.camera;
+    const prevTrack = gameState.track;
+    const prevCamera = gameState.camera;
 
-    state.viewPLID = packet.ViewPLID;
-    state.camera = packet.InGameCam;
-    state.track = packet.Track;
+    gameState.viewPLID = packet.ViewPLID;
+    gameState.camera = packet.InGameCam;
+    gameState.track = packet.Track;
 
     const isSessionInProgress = packet.RaceInProg !== RaceState.NO_RACE;
 
@@ -74,8 +74,8 @@ import { loadTrackSoundConfigs } from "./tracks";
       ];
 
       if (
-        inCarCameras.includes(state.camera) &&
-        (prevCamera !== state.camera ||
+        inCarCameras.includes(gameState.camera) &&
+        (prevCamera !== gameState.camera ||
           (packet.Flags & StateFlags.ISS_SHIFTU) === 0)
       ) {
         resumePositionalSounds();
@@ -84,12 +84,12 @@ import { loadTrackSoundConfigs } from "./tracks";
       }
     }
 
-    if (prevTrack !== state.track) {
-      if (state.track === null) {
+    if (prevTrack !== gameState.track) {
+      if (gameState.track === null) {
         pausePositionalSounds();
         pauseGlobalSounds();
       } else {
-        loadSounds(soundConfig, state.track);
+        loadSounds(soundConfig, gameState.track);
 
         if (!isSessionInProgress) {
           pausePositionalSounds();
@@ -103,7 +103,7 @@ import { loadTrackSoundConfigs } from "./tracks";
 
   inSim.on(PacketType.ISP_RST, () => {
     console.log("Session started");
-    if (state.track === null) {
+    if (gameState.track === null) {
       return;
     }
 
@@ -124,7 +124,7 @@ import { loadTrackSoundConfigs } from "./tracks";
 
   inSim.on(PacketType.ISP_MCI, (packet) => {
     packet.Info.forEach((info) => {
-      if (info.PLID !== state.viewPLID) {
+      if (info.PLID !== gameState.viewPLID) {
         return;
       }
 
