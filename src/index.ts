@@ -13,14 +13,7 @@ import {
   ViewIdentifier,
 } from "node-insim/packets";
 
-import {
-  loadSounds,
-  pauseGlobalSounds,
-  pausePositionalSounds,
-  resumeGlobalSounds,
-  resumePositionalSounds,
-  updateListenerPosition,
-} from "./audio";
+import { AudioManager } from "./AudioManager";
 import { loadConfig } from "./config";
 import { gameState } from "./gameState";
 import { loadTrackSoundConfigs } from "./tracks";
@@ -28,6 +21,7 @@ import { loadTrackSoundConfigs } from "./tracks";
 (async function () {
   const config = await loadConfig();
   const soundConfig = await loadTrackSoundConfigs(config.sounds.profile);
+  const audioManager = new AudioManager();
 
   console.log(`Connecting to ${config.insim.host}:${config.insim.port}`);
 
@@ -78,24 +72,25 @@ import { loadTrackSoundConfigs } from "./tracks";
         (prevCamera !== gameState.camera ||
           (packet.Flags & StateFlags.ISS_SHIFTU) === 0)
       ) {
-        resumePositionalSounds();
+        audioManager.resumePositionalSounds();
       } else {
-        pausePositionalSounds();
+        audioManager.pausePositionalSounds();
       }
     }
 
     if (prevTrack !== gameState.track) {
       if (gameState.track === null) {
-        pausePositionalSounds();
-        pauseGlobalSounds();
+        audioManager.pausePositionalSounds();
+        audioManager.pauseGlobalSounds();
       } else {
-        loadSounds(soundConfig, gameState.track);
+        console.log(`Track changed: ${gameState.track}`);
+        audioManager.loadSounds(soundConfig, gameState.track);
 
         if (!isSessionInProgress) {
-          pausePositionalSounds();
-          pauseGlobalSounds();
+          audioManager.pausePositionalSounds();
+          audioManager.pauseGlobalSounds();
         } else {
-          resumeGlobalSounds();
+          audioManager.resumeGlobalSounds();
         }
       }
     }
@@ -109,16 +104,16 @@ import { loadTrackSoundConfigs } from "./tracks";
 
     // Wait for MCI packets to arrive before playing sounds
     setTimeout(() => {
-      resumePositionalSounds();
-      resumeGlobalSounds();
+      audioManager.resumePositionalSounds();
+      audioManager.resumeGlobalSounds();
     }, 1000);
   });
 
   inSim.on(PacketType.ISP_TINY, (packet) => {
     if (packet.SubT === TinyType.TINY_REN) {
       console.log("Session ended");
-      pausePositionalSounds();
-      pauseGlobalSounds();
+      audioManager.pausePositionalSounds();
+      audioManager.pauseGlobalSounds();
     }
   });
 
@@ -128,7 +123,7 @@ import { loadTrackSoundConfigs } from "./tracks";
         return;
       }
 
-      updateListenerPosition({
+      audioManager.updateListenerPosition({
         x: info.X,
         y: info.Y,
         z: info.Z,
